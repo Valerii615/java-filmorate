@@ -79,7 +79,7 @@ public class FilmValidatorTests {
                     "11111111111111111111111111111111111111111111111111111111111");
             filmController.validator(film);
         } catch (Exception e) {
-            assertEquals("Длина описания не должна превышать — 200 символов", e.getMessage(), "Получено неверное исключение");
+            assertEquals("Длина описания не должна превышать — 200 символов, текущая длинна: " + film.getDescription().length(), e.getMessage(), "Получено неверное исключение");
         }
     }
 
