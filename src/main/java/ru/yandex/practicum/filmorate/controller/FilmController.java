@@ -25,8 +25,10 @@ public class FilmController {
 
     @PostMapping
     public Film addingFilm(@RequestBody Film film) {
+        log.info("Начало обрадотки эндпоинта добавления фильма в память приложения /films metod: Post");
         validator(film);
         film.setId(getNextId());
+        log.info("Объекту film.name = \"" + film.getName() + "\" присвоен id = " + film.getId());
         films.put(film.getId(), film);
         log.info("Фильм id = " + film.getId() + " добавлен в память приложения");
         return film;
@@ -34,6 +36,7 @@ public class FilmController {
 
     @PutMapping
     public Film updatingFilm(@RequestBody Film newFilm) {
+        log.info("Начало обрадотки эндпоинта обновления данных фильма /films metod: Put");
         if (newFilm.getId() == null) {
             log.error("Id должен быть указан");
             throw new ConditionsNotMetException("Id должен быть указан");
@@ -45,7 +48,7 @@ public class FilmController {
             oldFilm.setDescription(newFilm.getDescription());
             oldFilm.setReleaseDate(newFilm.getReleaseDate());
             oldFilm.setDuration(newFilm.getDuration());
-            log.info("Фильм id = " + oldFilm.getId() + " обновлен");
+            log.info("Фильм id = " + oldFilm.getId() + " обновлен " + oldFilm);
             return oldFilm;
         }
         log.error("Фильм с id = " + newFilm.getId() + " не найден");
@@ -59,8 +62,8 @@ public class FilmController {
         }
         if (film.getDescription() != null) {
             if (film.getDescription().length() > 200) {
-                log.error("Длина описания не должна превышать — 200 символов");
-                throw new ValidationException("Длина описания не должна превышать — 200 символов");
+                log.error("Длина описания не должна превышать — 200 символов, текущая длинна: " + film.getDescription().length());
+                throw new ValidationException("Длина описания не должна превышать — 200 символов, текущая длинна: " + film.getDescription().length());
             }
         }
         if (film.getReleaseDate() != null) {
@@ -73,6 +76,7 @@ public class FilmController {
             log.error("Продолжительность фильма должна быть положительным числом");
             throw new ValidationException("Продолжительность фильма должна быть положительным числом");
         }
+        log.info("Валидация прошла успешно");
     }
 
     private long getNextId() {

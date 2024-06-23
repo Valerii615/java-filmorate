@@ -26,8 +26,10 @@ public class UserController {
 
     @PostMapping
     public User addingUser(@RequestBody User user) {
+        log.info("Начало обрадотки эндпоинта добавления пользователя в память приложения /users metod: Post");
         validator(user);
         user.setId(getNextId());
+        log.info("Объекту user.name = \"" + user.getName() + "\" присвоен id = " + user.getId());
         users.put(user.getId(), user);
         log.info("Пользователь id = " + user.getId() + " добавлен в память приложения");
         return user;
@@ -35,6 +37,7 @@ public class UserController {
 
     @PutMapping
     public User updatingFilm(@RequestBody User newUser) {
+        log.info("Начало обрадотки эндпоинта обновления данных пользователя /users metod: Put");
         if (newUser.getId() == null) {
             log.error("Id должен быть указан");
             throw new ConditionsNotMetException("Id должен быть указан");
@@ -46,7 +49,7 @@ public class UserController {
             oldUser.setLogin(newUser.getLogin());
             oldUser.setName(newUser.getName());
             oldUser.setBirthday(newUser.getBirthday());
-            log.info("Пользователь id = " + newUser.getId() + " обновлен");
+            log.info("Пользователь id = " + newUser.getId() + " обновлен " + oldUser);
             return oldUser;
         }
         log.error("Пользователь с id = " + newUser.getId() + " не найден");
@@ -70,7 +73,9 @@ public class UserController {
         }
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
+            log.info("Так как имя не было указано, ему присвоено значение поля login = " + user.getLogin());
         }
+        log.info("Валидация прошла успешно");
     }
 
     private long getNextId() {
