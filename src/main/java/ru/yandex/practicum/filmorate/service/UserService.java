@@ -60,7 +60,7 @@ public class UserService {
         if (user.getFriends() == null) {
             throw new NullPointerException("список друзей пуст");
         }
-        for (Long idFriend: user.getFriends()) {
+        for (Long idFriend : user.getFriends()) {
             friendsList.add(userStorage.getUserOfId(idFriend));
         }
         return friendsList;
@@ -69,7 +69,7 @@ public class UserService {
     public Collection<User> getSharedListOfFriends(Long id, Long otherId) {
         log.debug("id={}, otherId={}", id, otherId);
         Collection<User> sharedFriendsList = new ArrayList<>();
-        for (Long idFriends: userStorage.getUserOfId(id).getFriends()) {
+        for (Long idFriends : userStorage.getUserOfId(id).getFriends()) {
             if (userStorage.getUserOfId(otherId).getFriends().contains(idFriends)) {
                 sharedFriendsList.add(userStorage.getUserOfId(idFriends));
             }

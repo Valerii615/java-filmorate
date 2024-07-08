@@ -18,7 +18,6 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     private final Map<Long, Film> films = new HashMap<>();
 
-
     @Override
     public Film addFilm(Film film) {
         log.info("Начало обрадотки эндпоинта добавления фильма в память приложения /films metod: Post");
@@ -69,7 +68,6 @@ public class InMemoryFilmStorage implements FilmStorage {
         }
         return films.get(id);
     }
-
 
     private void validator(Film film) {
         if (film.getName() == null || film.getName().isBlank()) {

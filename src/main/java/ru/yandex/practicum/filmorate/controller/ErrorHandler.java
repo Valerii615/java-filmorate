@@ -11,8 +11,8 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 public class ErrorHandler {
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleValidation (final ValidationException e) {
-        ErrorResponse errorResponse = new ErrorResponse("error" , e.getMessage());
+    public ResponseEntity<ErrorResponse> handleValidation(final ValidationException e) {
+        ErrorResponse errorResponse = new ErrorResponse("error", e.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
