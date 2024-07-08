@@ -69,7 +69,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         return films.get(id);
     }
 
-    private void validator(Film film) {
+    public void validator(Film film) {
         if (film.getName() == null || film.getName().isBlank()) {
             log.error("Название не может быть пустым");
             throw new ValidationException("Название не может быть пустым");

@@ -69,7 +69,7 @@ public class InMemoryUserStorage implements UserStorage {
         return users.get(id);
     }
 
-    private void validator(User user) {
+    public void validator(User user) {
         if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains(String.valueOf('@'))) {
             log.error("Электронная почта не может быть пустой и должна содержать символ @");
             throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @");
