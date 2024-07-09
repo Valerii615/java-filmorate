@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
 import jakarta.validation.Constraint;
-import jakarta.validation.constraints.Past;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
