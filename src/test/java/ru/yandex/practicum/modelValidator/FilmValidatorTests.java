@@ -1,7 +1,5 @@
 package ru.yandex.practicum.modelValidator;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -13,6 +11,8 @@ import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FilmValidatorTests {
     static InMemoryFilmStorage filmStorage;
@@ -40,12 +40,12 @@ public class FilmValidatorTests {
 
         List<ConstraintViolation> violationList = new ArrayList<>(validator.validate(film));
         assertEquals(1, violationList.size(), "неверное количество исключений");
-        assertEquals("не должно быть пустым", violationList.getFirst().getMessage(), "получено неверное исключение");
+        assertEquals("must not be blank", violationList.getFirst().getMessage(), "получено неверное исключение");
 
         film.setName("   ");
         List<ConstraintViolation> violationList1 = new ArrayList<>(validator.validate(film));
         assertEquals(1, violationList1.size(), "неверное количество исключений");
-        assertEquals("не должно быть пустым", violationList1.getFirst().getMessage(), "получено неверное исключение");
+        assertEquals("must not be blank", violationList1.getFirst().getMessage(), "получено неверное исключение");
 
         film.setName("Имя");
         List<ConstraintViolation> violationList2 = new ArrayList<>(validator.validate(film));
@@ -65,7 +65,7 @@ public class FilmValidatorTests {
 
         List<ConstraintViolation> violationList = new ArrayList<>(validator.validate(film));
         assertEquals(1, violationList.size(), "неверное количество исключений");
-        assertEquals("не должно быть пустым", violationList.getFirst().getMessage(), "получено неверное исключение");
+        assertEquals("must not be blank", violationList.getFirst().getMessage(), "получено неверное исключение");
 
         film.setDescription("Очень длинное описание  " +
                 "11111111111111111111111111111111111111111111111111111111111" +
@@ -119,7 +119,7 @@ public class FilmValidatorTests {
 
         film.setDuration(-30);
         List<ConstraintViolation> violationList2 = new ArrayList<>(validator.validate(film));
-        assertEquals("должно быть больше или равно 0", violationList2.getFirst().getMessage(), "получено неверное исключение");
+        assertEquals("must be greater than or equal to 0", violationList2.getFirst().getMessage(), "получено неверное исключение");
 
         film.setDuration(30);
         List<ConstraintViolation> violationList3 = new ArrayList<>(validator.validate(film));

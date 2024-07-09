@@ -15,14 +15,14 @@ import java.util.Set;
 @AllArgsConstructor
 public class Film {
     private Long id;
-    @NotBlank
+    @NotBlank(message = "must not be blank")
     private String name;
-    @NotBlank
+    @NotBlank(message = "must not be blank")
     @Size(max = 200)
     private String description;
     @MinimumDate
     private LocalDate releaseDate;
-    @PositiveOrZero
+    @PositiveOrZero(message = "must be greater than or equal to 0")
     private int duration;
     private Set<Long> likes;
 }

@@ -15,14 +15,14 @@ import java.util.Set;
 @AllArgsConstructor
 public class User {
     private Long id;
-    @NotBlank
+    @NotBlank(message = "must not be blank")
     @Email
     private String email;
-    @NotBlank
+    @NotBlank(message = "must not be blank")
     @NotContainSpace
     private String login;
     private String name;
-    @Past
+    @Past(message = "must be a past date")
     private LocalDate birthday;
     private Set<Long> friends;
 }

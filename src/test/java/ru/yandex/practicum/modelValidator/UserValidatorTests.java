@@ -1,7 +1,5 @@
 package ru.yandex.practicum.modelValidator;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -13,6 +11,8 @@ import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UserValidatorTests {
 
@@ -42,7 +42,7 @@ public class UserValidatorTests {
 
         List<ConstraintViolation> violationList = new ArrayList<>(validator.validate(user));
         assertEquals(1, violationList.size(), "неверное количество исключений");
-        assertEquals("не должно быть пустым", violationList.getFirst().getMessage(), "получено неверное исключение");
+        assertEquals("must not be blank", violationList.getFirst().getMessage(), "получено неверное исключение");
 
         user.setEmail("sdb233");
         List<ConstraintViolation> violationList2 = new ArrayList<>(validator.validate(user));
@@ -66,7 +66,7 @@ public class UserValidatorTests {
 
         List<ConstraintViolation> violationList = new ArrayList<>(validator.validate(user));
         assertEquals(1, violationList.size(), "неверное количество исключений");
-        assertEquals("не должно быть пустым", violationList.getFirst().getMessage(), "получено неверное исключение");
+        assertEquals("must not be blank", violationList.getFirst().getMessage(), "получено неверное исключение");
 
         user.setLogin("login");
         List<ConstraintViolation> violationList2 = new ArrayList<>(validator.validate(user));
@@ -114,6 +114,6 @@ public class UserValidatorTests {
 
         user.setBirthday(LocalDate.of(9999, 9, 9));
         List<ConstraintViolation> violationList3 = new ArrayList<>(validator.validate(user));
-        assertEquals("должно содержать прошедшую дату", violationList3.getFirst().getMessage(), "получено неверное исключение");
+        assertEquals("must be a past date", violationList3.getFirst().getMessage(), "получено неверное исключение");
     }
 }
