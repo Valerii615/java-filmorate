@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 @Slf4j
@@ -20,9 +21,10 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Film addFilm(Film film) {
         log.info("Начало обрадотки эндпоинта добавления фильма в память приложения /films metod: Post");
         film.setId(getNextId());
-        log.info("Объекту film.name = \"" + film.getName() + "\" присвоен id = " + film.getId());
+        film.setLikes(new HashSet<>());
+        log.info("Объекту film.name = \"{}\" присвоен id = {}", film.getName(), film.getId());
         films.put(film.getId(), film);
-        log.info("Фильм id = " + film.getId() + " добавлен в память приложения");
+        log.info("Фильм id = {} добавлен в память приложения", film.getId());
         return film;
     }
 
@@ -30,7 +32,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Film updateFilm(Film newFilm) {
         log.info("Начало обрадотки эндпоинта обновления данных фильма /films metod: Put");
         if (newFilm.getId() == null) {
-            log.error("Id должен быть указан");
+            log.warn("Id должен быть указан");
             throw new ConditionsNotMetException("Id должен быть указан");
         }
         if (films.containsKey(newFilm.getId())) {
@@ -39,10 +41,10 @@ public class InMemoryFilmStorage implements FilmStorage {
             oldFilm.setDescription(newFilm.getDescription());
             oldFilm.setReleaseDate(newFilm.getReleaseDate());
             oldFilm.setDuration(newFilm.getDuration());
-            log.info("Фильм id = " + oldFilm.getId() + " обновлен " + oldFilm);
+            log.info("Фильм id = {} обновлен {}", oldFilm.getId(), oldFilm);
             return oldFilm;
         }
-        log.error("Фильм с id = " + newFilm.getId() + " не найден");
+        log.warn("Фильм с id = {} не найден", newFilm.getId());
         throw new NotFoundException("Фильм с id = " + newFilm.getId() + " не найден");
     }
 

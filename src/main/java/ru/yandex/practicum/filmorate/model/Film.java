@@ -25,5 +25,5 @@ public class Film {
     private LocalDate releaseDate;
     @PositiveOrZero
     private int duration;
-    private Set<Long> likes = new HashSet<>();
+    private Set<Long> likes;
 }

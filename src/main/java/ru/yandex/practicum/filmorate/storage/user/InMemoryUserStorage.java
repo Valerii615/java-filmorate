@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 @Slf4j
@@ -21,9 +22,10 @@ public class InMemoryUserStorage implements UserStorage {
         log.info("Начало обрадотки эндпоинта добавления пользователя в память приложения /users metod: Post");
         validator(user);
         user.setId(getNextId());
-        log.info("Объекту user.name = \"" + user.getName() + "\" присвоен id = " + user.getId());
+        user.setFriends(new HashSet<>());
+        log.info("Объекту user.name = \"{}\" присвоен id = {}", user.getName(), user.getId());
         users.put(user.getId(), user);
-        log.info("Пользователь id = " + user.getId() + " добавлен в память приложения");
+        log.info("Пользователь id = {} добавлен в память приложения", user.getId());
         return user;
     }
 
@@ -31,7 +33,7 @@ public class InMemoryUserStorage implements UserStorage {
     public User updateUser(User newUser) {
         log.info("Начало обрадотки эндпоинта обновления данных пользователя /users metod: Put");
         if (newUser.getId() == null) {
-            log.error("Id должен быть указан");
+            log.warn("Id должен быть указан");
             throw new ConditionsNotMetException("Id должен быть указан");
         }
         if (users.containsKey(newUser.getId())) {
@@ -41,10 +43,10 @@ public class InMemoryUserStorage implements UserStorage {
             oldUser.setLogin(newUser.getLogin());
             oldUser.setName(newUser.getName());
             oldUser.setBirthday(newUser.getBirthday());
-            log.info("Пользователь id = " + newUser.getId() + " обновлен " + oldUser);
+            log.info("Пользователь id = {} обновлен {}", newUser.getId(), oldUser);
             return oldUser;
         }
-        log.error("Пользователь с id = " + newUser.getId() + " не найден");
+        log.warn("Пользователь с id = {} не найден", newUser.getId());
         throw new NotFoundException("Пользователь с id = " + newUser.getId() + " не найден");
     }
 
@@ -70,7 +72,7 @@ public class InMemoryUserStorage implements UserStorage {
     public void validator(User user) {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
-            log.info("Так как имя не было указано, ему присвоено значение поля login = " + user.getLogin());
+            log.info("Так как имя не было указано, ему присвоено значение поля login = {}", user.getLogin());
         }
         log.info("Валидация прошла успешно");
     }
