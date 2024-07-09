@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,10 +15,15 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    Long id;
-    String email;
-    String login;
-    String name;
-    LocalDate birthday;
-    Set<Long> friends = new HashSet<>();
+    private Long id;
+    @NotBlank
+    @Email
+    private String email;
+    @NotBlank
+    @NotContainSpace
+    private String login;
+    private String name;
+    @Past
+    private LocalDate birthday;
+    private Set<Long> friends = new HashSet<>();
 }

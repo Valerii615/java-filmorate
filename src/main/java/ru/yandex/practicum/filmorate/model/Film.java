@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,10 +15,15 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Film {
-    Long id;
-    String name;
-    String description;
-    LocalDate releaseDate;
-    int duration;
-    Set<Long> likes = new HashSet<>();
+    private Long id;
+    @NotBlank
+    private String name;
+    @NotBlank
+    @Size(max = 200)
+    private String description;
+    @MinimumDate
+    private LocalDate releaseDate;
+    @PositiveOrZero
+    private int duration;
+    private Set<Long> likes = new HashSet<>();
 }
