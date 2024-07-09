@@ -46,7 +46,7 @@ public class UserValidatorTests {
 
         user.setEmail("sdb233");
         List<ConstraintViolation> violationList2 = new ArrayList<>(validator.validate(user));
-        assertEquals("должно иметь формат адреса электронной почты", violationList2.getFirst().getMessage(), "получено неверное исключение");
+        assertEquals("must be a well-formed email address", violationList2.getFirst().getMessage(), "получено неверное исключение");
 
         user.setEmail("eee@yandex.ru");
         List<ConstraintViolation> violationList3 = new ArrayList<>(validator.validate(user));
@@ -74,7 +74,7 @@ public class UserValidatorTests {
 
         user.setLogin("l o g i n");
         List<ConstraintViolation> violationList3 = new ArrayList<>(validator.validate(user));
-        assertEquals("значение не должно содержать пробелы", violationList3.getFirst().getMessage(), "получено неверное исключение");
+        assertEquals("the value must not contain spaces", violationList3.getFirst().getMessage(), "получено неверное исключение");
 
 
     }

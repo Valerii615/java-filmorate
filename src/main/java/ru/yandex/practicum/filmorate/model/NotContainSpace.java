@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = NotContainSpaceValidator.class)
 @Documented
 public @interface NotContainSpace {
-    String message() default "значение не должно содержать пробелы";
+    String message() default "the value must not contain spaces";
     Class<?>[] groups() default {};
     Class<?>[] payload() default {};
 }

@@ -72,7 +72,7 @@ public class FilmValidatorTests {
                 "11111111111111111111111111111111111111111111111111111111111" +
                 "11111111111111111111111111111111111111111111111111111111111");
         List<ConstraintViolation> violationList1 = new ArrayList<>(validator.validate(film));
-        assertEquals("размер должен находиться в диапазоне от 0 до 200", violationList1.getFirst().getMessage(), "получено неверное исключение");
+        assertEquals("size must be between 0 and 200", violationList1.getFirst().getMessage(), "получено неверное исключение");
 
         film.setDescription("обычное описание");
         List<ConstraintViolation> violationList2 = new ArrayList<>(validator.validate(film));

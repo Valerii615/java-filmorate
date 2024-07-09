@@ -16,7 +16,7 @@ import java.util.Set;
 public class User {
     private Long id;
     @NotBlank(message = "must not be blank")
-    @Email
+    @Email(message = "must be a well-formed email address")
     private String email;
     @NotBlank(message = "must not be blank")
     @NotContainSpace

@@ -18,7 +18,7 @@ public class Film {
     @NotBlank(message = "must not be blank")
     private String name;
     @NotBlank(message = "must not be blank")
-    @Size(max = 200)
+    @Size(max = 200, message = "size must be between 0 and 200")
     private String description;
     @MinimumDate
     private LocalDate releaseDate;
