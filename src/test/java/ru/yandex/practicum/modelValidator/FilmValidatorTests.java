@@ -33,7 +33,6 @@ public class FilmValidatorTests {
     @Test
     public void checkingTheBoundaryValuesOfTheNameField() {
         Film film = Film.builder()
-                .name(null)
                 .description("описание")
                 .releaseDate(LocalDate.of(2024, 6, 22))
                 .duration(30)
@@ -60,7 +59,6 @@ public class FilmValidatorTests {
     public void checkingTheBoundaryValuesOfTheDescriptionField() {
         Film film = Film.builder()
                 .name("Имя")
-                .description(null)
                 .releaseDate(LocalDate.of(2024, 6, 22))
                 .duration(30)
                 .build();
@@ -89,7 +87,6 @@ public class FilmValidatorTests {
         Film film = Film.builder()
                 .name("Имя")
                 .description("Описание")
-                .releaseDate(null)
                 .duration(30)
                 .build();
 

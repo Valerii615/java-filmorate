@@ -35,7 +35,6 @@ public class UserValidatorTests {
     @Test
     public void checkingTheBoundaryValuesOfTheEmailField() {
         User user = User.builder()
-                .email(null)
                 .login("login")
                 .name("Имя")
                 .birthday(LocalDate.of(1999, 1, 1))
@@ -61,7 +60,6 @@ public class UserValidatorTests {
     public void checkingTheBoundaryValuesOfTheLoginField() {
         User user = User.builder()
                 .email("eee@yandex.ru")
-                .login(null)
                 .name("Имя")
                 .birthday(LocalDate.of(1999, 1, 1))
                 .build();
@@ -105,7 +103,6 @@ public class UserValidatorTests {
                 .email("eee@yandex.ru")
                 .login("login")
                 .name("name")
-                .birthday(null)
                 .build();
 
         List<ConstraintViolation> violationList = new ArrayList<>(validator.validate(user));
