@@ -21,7 +21,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film addFilm(Film film) {
         log.info("Начало обрадотки эндпоинта добавления фильма в память приложения /films metod: Post");
-        validator(film);
         film.setId(getNextId());
         log.info("Объекту film.name = \"" + film.getName() + "\" присвоен id = " + film.getId());
         films.put(film.getId(), film);
@@ -37,7 +36,6 @@ public class InMemoryFilmStorage implements FilmStorage {
             throw new ConditionsNotMetException("Id должен быть указан");
         }
         if (films.containsKey(newFilm.getId())) {
-            validator(newFilm);
             Film oldFilm = films.get(newFilm.getId());
             oldFilm.setName(newFilm.getName());
             oldFilm.setDescription(newFilm.getDescription());
@@ -67,30 +65,6 @@ public class InMemoryFilmStorage implements FilmStorage {
             throw new NotFoundException("фильма с id=" + id + " не найдено");
         }
         return films.get(id);
-    }
-
-    public void validator(Film film) {
-        if (film.getName() == null || film.getName().isBlank()) {
-            log.error("Название не может быть пустым");
-            throw new ValidationException("Название не может быть пустым");
-        }
-        if (film.getDescription() != null) {
-            if (film.getDescription().length() > 200) {
-                log.error("Длина описания не должна превышать — 200 символов, текущая длинна: " + film.getDescription().length());
-                throw new ValidationException("Длина описания не должна превышать — 200 символов, текущая длинна: " + film.getDescription().length());
-            }
-        }
-        if (film.getReleaseDate() != null) {
-            if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-                log.error("Дата релиза должна быть не раньше 28 декабря 1895 года");
-                throw new ValidationException("Дата релиза должна быть не раньше 28 декабря 1895 года");
-            }
-        }
-        if (film.getDuration() <= 0) {
-            log.error("Продолжительность фильма должна быть положительным числом");
-            throw new ValidationException("Продолжительность фильма должна быть положительным числом");
-        }
-        log.info("Валидация прошла успешно");
     }
 
     private long getNextId() {

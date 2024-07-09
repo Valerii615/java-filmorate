@@ -70,26 +70,11 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     public void validator(User user) {
-        if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains(String.valueOf('@'))) {
-            log.error("Электронная почта не может быть пустой и должна содержать символ @");
-            throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @");
-        }
-        if (user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(String.valueOf(' '))) {
-            log.error("Логин не может быть пустым и содержать пробелы");
-            throw new ValidationException("Логин не может быть пустым и содержать пробелы");
-        }
-        if (user.getBirthday() != null) {
-            if (user.getBirthday().isAfter(LocalDate.now())) {
-                log.error("Дата рождения не может быть в будущем");
-                throw new ValidationException("Дата рождения не может быть в будущем");
-            }
-        }
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
             log.info("Так как имя не было указано, ему присвоено значение поля login = " + user.getLogin());
         }
         log.info("Валидация прошла успешно");
-
     }
 
     private long getNextId() {
