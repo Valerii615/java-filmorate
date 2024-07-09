@@ -17,7 +17,6 @@ import java.util.List;
 public class UserValidatorTests {
 
     static InMemoryUserStorage userStorage;
-    static User user;
     static Validator validator;
 
 
@@ -35,7 +34,7 @@ public class UserValidatorTests {
      */
     @Test
     public void checkingTheBoundaryValuesOfTheEmailField() {
-        user = User.builder()
+        User user = User.builder()
                 .email(null)
                 .login("login")
                 .name("Имя")
@@ -60,7 +59,7 @@ public class UserValidatorTests {
      */
     @Test
     public void checkingTheBoundaryValuesOfTheLoginField() {
-        user = User.builder()
+        User user = User.builder()
                 .email("eee@yandex.ru")
                 .login(null)
                 .name("Имя")
@@ -87,7 +86,7 @@ public class UserValidatorTests {
      */
     @Test
     public void checkingTheBoundaryValuesOfTheNameField() {
-        user = User.builder()
+        User user = User.builder()
                 .email("eee.@yandex.ru")
                 .login("login")
                 .birthday(LocalDate.of(1999, 1, 1))
@@ -102,7 +101,7 @@ public class UserValidatorTests {
      */
     @Test
     public void checkingTheBoundaryValuesOfTheBirthdayField() {
-        user = User.builder()
+        User user = User.builder()
                 .email("eee@yandex.ru")
                 .login("login")
                 .name("name")

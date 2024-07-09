@@ -16,7 +16,6 @@ import java.util.List;
 
 public class FilmValidatorTests {
     static InMemoryFilmStorage filmStorage;
-    static Film film;
     static Validator validator;
 
     /**
@@ -33,7 +32,7 @@ public class FilmValidatorTests {
      */
     @Test
     public void checkingTheBoundaryValuesOfTheNameField() {
-        film = Film.builder()
+        Film film = Film.builder()
                 .name(null)
                 .description("описание")
                 .releaseDate(LocalDate.of(2024, 6, 22))
@@ -59,7 +58,7 @@ public class FilmValidatorTests {
      */
     @Test
     public void checkingTheBoundaryValuesOfTheDescriptionField() {
-        film = Film.builder()
+        Film film = Film.builder()
                 .name("Имя")
                 .description(null)
                 .releaseDate(LocalDate.of(2024, 6, 22))
@@ -87,7 +86,7 @@ public class FilmValidatorTests {
      */
     @Test
     public void checkingTheBoundaryValuesOfTheReleaseDateField() {
-        film = Film.builder()
+        Film film = Film.builder()
                 .name("Имя")
                 .description("Описание")
                 .releaseDate(null)
@@ -111,7 +110,7 @@ public class FilmValidatorTests {
      */
     @Test
     public void checkingTheBoundaryValuesOfTheDurationField() {
-        film = Film.builder()
+        Film film = Film.builder()
                 .name("Имя")
                 .description("Описание")
                 .releaseDate(LocalDate.of(2024, 6, 22))
