@@ -1,2 +1,2 @@
 # java-filmorate
-![alt text](data_structure_diagram.png)
+![alt text](data%20structure%20diagram.png)
