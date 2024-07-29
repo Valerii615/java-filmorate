@@ -1,23 +1,30 @@
 package ru.yandex.practicum.modelValidator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FilmValidatorTests {
-    static FilmController filmController;
-    static Film film;
+    static InMemoryFilmStorage filmStorage;
+    static Validator validator;
 
     /**
      * инициализация filmController
      */
     @BeforeAll
-    static void preparation() {
-        filmController = new FilmController();
+    static void setUp() {
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
+        filmStorage = new InMemoryFilmStorage();
     }
 
     /**
@@ -25,29 +32,24 @@ public class FilmValidatorTests {
      */
     @Test
     public void checkingTheBoundaryValuesOfTheNameField() {
-        film = Film.builder()
+        Film film = Film.builder()
                 .description("описание")
                 .releaseDate(LocalDate.of(2024, 6, 22))
                 .duration(30)
                 .build();
 
-        try {
-            filmController.validator(film);
-        } catch (Exception e) {
-            assertEquals("Название не может быть пустым", e.getMessage(), "Получено неверное исключение");
-        }
-        try {
-            film.setName("        ");
-            filmController.validator(film);
-        } catch (Exception e) {
-            assertEquals("Название не может быть пустым", e.getMessage(), "Получено неверное исключение");
-        }
-        try {
-            film.setName("Имя");
-            filmController.validator(film);
-        } catch (Exception e) {
-            fail("Исключение не должно было появиться");
-        }
+        List<ConstraintViolation> violationList = new ArrayList<>(validator.validate(film));
+        assertEquals(1, violationList.size(), "неверное количество исключений");
+        assertEquals("must not be blank", violationList.getFirst().getMessage(), "получено неверное исключение");
+
+        film.setName("   ");
+        List<ConstraintViolation> violationList1 = new ArrayList<>(validator.validate(film));
+        assertEquals(1, violationList1.size(), "неверное количество исключений");
+        assertEquals("must not be blank", violationList1.getFirst().getMessage(), "получено неверное исключение");
+
+        film.setName("Имя");
+        List<ConstraintViolation> violationList2 = new ArrayList<>(validator.validate(film));
+        assertEquals(0, violationList2.size(), "неверное количество исключений");
     }
 
     /**
@@ -55,32 +57,26 @@ public class FilmValidatorTests {
      */
     @Test
     public void checkingTheBoundaryValuesOfTheDescriptionField() {
-        film = Film.builder()
+        Film film = Film.builder()
                 .name("Имя")
                 .releaseDate(LocalDate.of(2024, 6, 22))
                 .duration(30)
                 .build();
 
-        try {
-            filmController.validator(film);
-        } catch (Exception e) {
-            fail("Исключение не должно было появиться");
-        }
-        try {
-            film.setDescription("Описание");
-            filmController.validator(film);
-        } catch (Exception e) {
-            fail("Исключение не должно было появиться");
-        }
-        try {
-            film.setDescription("Очень длинное описание  " +
-                    "11111111111111111111111111111111111111111111111111111111111" +
-                    "11111111111111111111111111111111111111111111111111111111111" +
-                    "11111111111111111111111111111111111111111111111111111111111");
-            filmController.validator(film);
-        } catch (Exception e) {
-            assertEquals("Длина описания не должна превышать — 200 символов, текущая длинна: " + film.getDescription().length(), e.getMessage(), "Получено неверное исключение");
-        }
+        List<ConstraintViolation> violationList = new ArrayList<>(validator.validate(film));
+        assertEquals(1, violationList.size(), "неверное количество исключений");
+        assertEquals("must not be blank", violationList.getFirst().getMessage(), "получено неверное исключение");
+
+        film.setDescription("Очень длинное описание  " +
+                "11111111111111111111111111111111111111111111111111111111111" +
+                "11111111111111111111111111111111111111111111111111111111111" +
+                "11111111111111111111111111111111111111111111111111111111111");
+        List<ConstraintViolation> violationList1 = new ArrayList<>(validator.validate(film));
+        assertEquals("size must be between 0 and 200", violationList1.getFirst().getMessage(), "получено неверное исключение");
+
+        film.setDescription("обычное описание");
+        List<ConstraintViolation> violationList2 = new ArrayList<>(validator.validate(film));
+        assertEquals(0, violationList2.size(), "неверное количество исключений");
     }
 
     /**
@@ -88,29 +84,22 @@ public class FilmValidatorTests {
      */
     @Test
     public void checkingTheBoundaryValuesOfTheReleaseDateField() {
-        film = Film.builder()
+        Film film = Film.builder()
                 .name("Имя")
                 .description("Описание")
                 .duration(30)
                 .build();
 
-        try {
-            filmController.validator(film);
-        } catch (Exception e) {
-            fail("Исключение не должно было появиться");
-        }
-        try {
-            film.setReleaseDate(LocalDate.of(2024, 6, 22));
-            filmController.validator(film);
-        } catch (Exception e) {
-            fail("Исключение не должно было появиться");
-        }
-        try {
-            film.setReleaseDate(LocalDate.of(1, 1, 1));
-            filmController.validator(film);
-        } catch (Exception e) {
-            assertEquals("Дата релиза должна быть не раньше 28 декабря 1895 года", e.getMessage(), "Получено неверное исключение");
-        }
+        List<ConstraintViolation> violationList = new ArrayList<>(validator.validate(film));
+        assertEquals(0, violationList.size(), "неверное количество исключений");
+
+        film.setReleaseDate(LocalDate.of(2024, 6, 22));
+        List<ConstraintViolation> violationList1 = new ArrayList<>(validator.validate(film));
+        assertEquals(0, violationList1.size(), "неверное количество исключений");
+
+        film.setReleaseDate(LocalDate.of(1, 1, 1));
+        List<ConstraintViolation> violationList3 = new ArrayList<>(validator.validate(film));
+        assertEquals("Date must not be before 1895-12-28", violationList3.getFirst().getMessage(), "получено неверное исключение");
     }
 
     /**
@@ -118,27 +107,22 @@ public class FilmValidatorTests {
      */
     @Test
     public void checkingTheBoundaryValuesOfTheDurationField() {
-        film = Film.builder()
+        Film film = Film.builder()
                 .name("Имя")
                 .description("Описание")
                 .releaseDate(LocalDate.of(2024, 6, 22))
+                .duration(0)
                 .build();
-        try {
-            filmController.validator(film);
-        } catch (Exception e) {
-            assertEquals("Продолжительность фильма должна быть положительным числом", e.getMessage(), "Получено неверное исключение");
-        }
-        try {
-            film.setDuration(-30);
-            filmController.validator(film);
-        } catch (Exception e) {
-            assertEquals("Продолжительность фильма должна быть положительным числом", e.getMessage(), "Получено неверное исключение");
-        }
-        try {
-            film.setDuration(30);
-            filmController.validator(film);
-        } catch (Exception e) {
-            fail("Исключение не должно было появиться");
-        }
+
+        List<ConstraintViolation> violationList = new ArrayList<>(validator.validate(film));
+        assertEquals(0, violationList.size(), "неверное количество исключений");
+
+        film.setDuration(-30);
+        List<ConstraintViolation> violationList2 = new ArrayList<>(validator.validate(film));
+        assertEquals("must be greater than or equal to 0", violationList2.getFirst().getMessage(), "получено неверное исключение");
+
+        film.setDuration(30);
+        List<ConstraintViolation> violationList3 = new ArrayList<>(validator.validate(film));
+        assertEquals(0, violationList3.size(), "неверное количество исключений");
     }
 }
