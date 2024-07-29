@@ -1,2 +1,2 @@
 # java-filmorate
-Template repository for Filmorate project.
+![alt text](data%20structure%20diagram.png)
