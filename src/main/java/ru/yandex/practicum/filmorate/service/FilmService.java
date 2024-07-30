@@ -1,80 +1,56 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.storage.dal.FilmDbStorage;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
+@Log4j2
 @Service
 public class FilmService {
-    private static final Logger log = LoggerFactory.getLogger(FilmService.class);
-    private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
+
+    private final FilmDbStorage filmDbStorage;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
-        this.filmStorage = filmStorage;
-        this.userStorage = userStorage;
+    public FilmService(FilmDbStorage filmDbStorage) {
+        this.filmDbStorage = filmDbStorage;
     }
 
     public Film addFilm(Film film) {
         log.debug("film={}", film);
-        return filmStorage.addFilm(film);
+        return filmDbStorage.add(film);
     }
 
     public Film updateFilm(Film newFilm) {
         log.debug("newFilm={}", newFilm);
-        return filmStorage.updateFilm(newFilm);
-    }
-
-    public void removeFilm(Long id) {
-        log.debug("id={}", id);
-        filmStorage.removeFilm(id);
+        return filmDbStorage.update(newFilm);
     }
 
     public Collection<Film> getAllFilms() {
-        log.debug("films.size={}", filmStorage.getAllFilms().size());
-        return filmStorage.getAllFilms();
+        return filmDbStorage.findAll();
     }
 
     public Film getFilmOfId(Long id) {
-        log.debug("id={}", id);
-        return filmStorage.getFilmOfId(id);
+        log.debug("getFilmOfId={}", id);
+        return filmDbStorage.findById(id);
     }
 
     public void addLike(Long filmId, Long userId) {
-        log.debug("usedId={}, filmId={}", userId, filmId);
-        userStorage.getUserOfId(userId);
-        filmStorage.getFilmOfId(filmId).getLikes().add(userId);
+        log.debug("addLike={}", filmId);
+        filmDbStorage.addLikeToFilm(filmId, userId);
     }
 
     public void removeLike(Long filmId, Long userId) {
-        log.debug("filmId={}, usedId={}", filmId, userId);
-        if (filmStorage.getFilmOfId(filmId).getLikes() == null) {
-            throw new NullPointerException("список лайков пуст");
-        }
-        userStorage.getUserOfId(userId);
-        if (filmStorage.getFilmOfId(filmId).getLikes().contains(userId)) {
-
-            filmStorage.getFilmOfId(filmId).getLikes().remove(userId);
-        }
+        log.debug("removeLike={}", filmId);
+        filmDbStorage.removeLikeFromFilm(filmId, userId);
     }
 
     public List<Film> getTopList(int count) {
-        log.debug("count={}", count);
-        if (count <= 0) {
-            count = 10;
-        }
-        List<Film> filmsList = new ArrayList<>(filmStorage.getAllFilms());
-        return filmsList.stream()
-                .filter(i -> i.getLikes() != null)
-                .sorted(new FilmComparator())
-                .limit(count)
-                .toList();
+        log.debug("getTopList={}", count);
+        return filmDbStorage.findTopFilms(count);
     }
 }
