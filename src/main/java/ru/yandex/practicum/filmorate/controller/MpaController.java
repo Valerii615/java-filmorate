@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.service.MpaService;
 
 import java.util.Collection;
 
-
 @Log4j2
 @RestController
 @RequestMapping("/mpa")
@@ -35,7 +34,4 @@ public class MpaController {
         log.info("начало обработки эндпоинта получения рейтинга по id={}", id);
         return mpaService.getMpaOfId(id);
     }
-
 }
-
-
