@@ -25,4 +25,6 @@ public class Film {
     @PositiveOrZero(message = "must be greater than or equal to 0")
     private int duration;
     private Set<Long> likes;
+    private Set<Genre> genres;
+    private Mpa mpa;
 }
