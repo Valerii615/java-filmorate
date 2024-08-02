@@ -3,10 +3,12 @@ package ru.yandex.practicum.modelValidator;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,28 +16,34 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+
 public class FilmValidatorTests {
-    static InMemoryFilmStorage filmStorage;
-    static Validator validator;
+    InMemoryFilmStorage filmStorage;
+    Validator validator;
+    Mpa mpa = new Mpa(1, "mpa");
+
 
     /**
      * инициализация filmController
      */
-    @BeforeAll
-    static void setUp() {
+    @BeforeEach
+    void setUp() {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
         filmStorage = new InMemoryFilmStorage();
+
     }
 
     /**
      * проверка граничных значений: поле "name"
      */
     @Test
+    @DirtiesContext
     public void checkingTheBoundaryValuesOfTheNameField() {
         Film film = Film.builder()
                 .description("описание")
                 .releaseDate(LocalDate.of(2024, 6, 22))
                 .duration(30)
+                .mpa(mpa)
                 .build();
 
         List<ConstraintViolation> violationList = new ArrayList<>(validator.validate(film));
@@ -56,11 +64,13 @@ public class FilmValidatorTests {
      * проверка граничных значений: поле "description"
      */
     @Test
+    @DirtiesContext
     public void checkingTheBoundaryValuesOfTheDescriptionField() {
         Film film = Film.builder()
                 .name("Имя")
                 .releaseDate(LocalDate.of(2024, 6, 22))
                 .duration(30)
+                .mpa(mpa)
                 .build();
 
         List<ConstraintViolation> violationList = new ArrayList<>(validator.validate(film));
@@ -83,15 +93,17 @@ public class FilmValidatorTests {
      * проверка граничных значений: поле "releaseDate"
      */
     @Test
+    @DirtiesContext
     public void checkingTheBoundaryValuesOfTheReleaseDateField() {
         Film film = Film.builder()
                 .name("Имя")
                 .description("Описание")
                 .duration(30)
+                .mpa(mpa)
                 .build();
 
         List<ConstraintViolation> violationList = new ArrayList<>(validator.validate(film));
-        assertEquals(0, violationList.size(), "неверное количество исключений");
+        assertEquals(1, violationList.size(), "неверное количество исключений");
 
         film.setReleaseDate(LocalDate.of(2024, 6, 22));
         List<ConstraintViolation> violationList1 = new ArrayList<>(validator.validate(film));
@@ -106,12 +118,14 @@ public class FilmValidatorTests {
      * проверка граничных значений: поле "duration"
      */
     @Test
+    @DirtiesContext
     public void checkingTheBoundaryValuesOfTheDurationField() {
         Film film = Film.builder()
                 .name("Имя")
                 .description("Описание")
                 .releaseDate(LocalDate.of(2024, 6, 22))
                 .duration(0)
+                .mpa(mpa)
                 .build();
 
         List<ConstraintViolation> violationList = new ArrayList<>(validator.validate(film));

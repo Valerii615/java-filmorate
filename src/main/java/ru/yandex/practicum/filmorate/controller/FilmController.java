@@ -24,42 +24,43 @@ public class FilmController {
 
     @GetMapping
     public Collection<Film> getAllFilms() {
+        log.info("начало обработки эндпоинта получения всех фильмов");
         return filmService.getAllFilms();
     }
 
     @GetMapping("/{id}")
     public Film getFilmOfId(@PathVariable Long id) {
+        log.info("начало обработки эндпоинта получения фильма по id={}", id);
         return filmService.getFilmOfId(id);
     }
 
     @GetMapping("/popular")
-    public List<Film> getTopList(@RequestParam Integer count) {
+    public List<Film> getTopList(@RequestParam int count) {
+        log.info("начало обработки эндпоинта получения Top списка фильмов");
         return filmService.getTopList(count);
     }
 
     @PostMapping
     public Film addFilm(@Valid @RequestBody Film film) {
+        log.info("начало обработки эндпоинта добавления фильма");
         return filmService.addFilm(film);
     }
 
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film newFilm) {
+        log.info("начало обработки эндпоинта обнавления фильма");
         return filmService.updateFilm(newFilm);
     }
 
     @PutMapping("/{id}/like/{userId}")
     public void addLike(@PathVariable Long id, @PathVariable Long userId) {
+        log.info("начало обработки эндпоинта добавления лайка к фильму");
         filmService.addLike(id, userId);
-    }
-
-    @DeleteMapping("/{id}")
-    public void removeFilm(@PathVariable Long id) {
-        log.info("запрос на удаление фильма id=" + id);
-        filmService.removeFilm(id);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
     public void removeLike(@PathVariable Long id, @PathVariable Long userId) {
+        log.info("начало обработки эндпоинта удаления лайка с фильма");
         filmService.removeLike(id, userId);
     }
 }
