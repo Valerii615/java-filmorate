@@ -208,9 +208,9 @@ public class FilmorateDataBaseAccessTests {
     public void addAndRemoveLike() {
         addAllFilm();
         addAllUser();
-        filmDbStorage.addLikeToFilm(1,1);
+        filmDbStorage.addLikeToFilm(1, 1);
         assertEquals(1, filmDbStorage.getLikes(1).size(), "Неверное количество лайков");
-        filmDbStorage.removeLikeFromFilm(1,1);
+        filmDbStorage.removeLikeFromFilm(1, 1);
         assertEquals(0, filmDbStorage.getLikes(1).size(), "Неверное количество лайков");
     }
 
@@ -221,9 +221,9 @@ public class FilmorateDataBaseAccessTests {
     @DirtiesContext
     public void addAndRemoveFriend() {
         addAllUser();
-        userDbStorage.addInFriend(1,2);
+        userDbStorage.addInFriend(1, 2);
         assertEquals(1, userDbStorage.findFriendsListId(1).size(), "Неверное количество друзей");
-        userDbStorage.removeFromFriend(1,2);
+        userDbStorage.removeFromFriend(1, 2);
         assertEquals(0, userDbStorage.findFriendsListId(1).size(), "Неверное количество друзей");
     }
 
@@ -242,9 +242,7 @@ public class FilmorateDataBaseAccessTests {
         try {
             userDbStorage.addUser(user);
         } catch (Exception e) {
-            assertEquals("PreparedStatementCallback; Значение NULL не разрешено для поля \"EMAIL\"\n" +
-                    "NULL not allowed for column \"EMAIL\"; SQL statement:\n" +
-                    "INSERT INTO users(email, login, name, birthday) VALUES (?, ?, ?, ?) [23502-224]",
+            assertEquals("PreparedStatementCallback; Значение NULL не разрешено для поля \"EMAIL\"\nNULL not allowed for column \"EMAIL\"; SQL statement:\nINSERT INTO users(email, login, name, birthday) VALUES (?, ?, ?, ?) [23502-224]",
                     e.getMessage(), "Получено неверное исключение");
         }
         user.setEmail("us0@mail.ru");
@@ -252,9 +250,7 @@ public class FilmorateDataBaseAccessTests {
         try {
             userDbStorage.addUser(user);
         } catch (Exception e) {
-            assertEquals("PreparedStatementCallback; Значение NULL не разрешено для поля \"LOGIN\"\n" +
-                    "NULL not allowed for column \"LOGIN\"; SQL statement:\n" +
-                    "INSERT INTO users(email, login, name, birthday) VALUES (?, ?, ?, ?) [23502-224]",
+            assertEquals("PreparedStatementCallback; Значение NULL не разрешено для поля \"LOGIN\"\nNULL not allowed for column \"LOGIN\"; SQL statement:\nINSERT INTO users(email, login, name, birthday) VALUES (?, ?, ?, ?) [23502-224]",
                     e.getMessage(), "Получено неверное исключение");
         }
     }
@@ -275,9 +271,7 @@ public class FilmorateDataBaseAccessTests {
         try {
             filmDbStorage.add(film);
         } catch (Exception e) {
-            assertEquals("PreparedStatementCallback; Значение NULL не разрешено для поля \"NAME\"\n" +
-                    "NULL not allowed for column \"NAME\"; SQL statement:\n" +
-                    "INSERT INTO films(name, description, releaseDate, duration, rating) VALUES (?, ?, ?, ?, ?) [23502-224]",
+            assertEquals("PreparedStatementCallback; Значение NULL не разрешено для поля \"NAME\"\nNULL not allowed for column \"NAME\"; SQL statement:\nINSERT INTO films(name, description, releaseDate, duration, rating) VALUES (?, ?, ?, ?, ?) [23502-224]",
                     e.getMessage(), "Получено неверное исключение");
         }
         film.setName("film0");
@@ -287,13 +281,10 @@ public class FilmorateDataBaseAccessTests {
         try {
             filmDbStorage.add(film);
         } catch (Exception e) {
-            assertEquals("PreparedStatementCallback; Значение слишком длинное для поля \"DESCRIPTION CHARACTER VARYING(200)\": \"'1111111111111111111111111111111111111111111111111111111111111111111111111111111... (201)\"\n" +
-                            "Value too long for column \"DESCRIPTION CHARACTER VARYING(200)\": \"'1111111111111111111111111111111111111111111111111111111111111111111111111111111... (201)\"; SQL statement:\n" +
-                            "INSERT INTO films(name, description, releaseDate, duration, rating) VALUES (?, ?, ?, ?, ?) [22001-224]",
+            assertEquals("PreparedStatementCallback; Значение слишком длинное для поля \"DESCRIPTION CHARACTER VARYING(200)\": \"'1111111111111111111111111111111111111111111111111111111111111111111111111111111... (201)\"\nValue too long for column \"DESCRIPTION CHARACTER VARYING(200)\": \"'1111111111111111111111111111111111111111111111111111111111111111111111111111111... (201)\"; SQL statement:\nINSERT INTO films(name, description, releaseDate, duration, rating) VALUES (?, ?, ?, ?, ?) [22001-224]",
                     e.getMessage(), "Получено неверное исключение");
         }
     }
-
 
     public void addAllFilm() {
         filmDbStorage.add(film1);
