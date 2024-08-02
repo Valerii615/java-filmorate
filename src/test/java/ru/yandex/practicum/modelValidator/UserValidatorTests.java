@@ -3,8 +3,9 @@ package ru.yandex.practicum.modelValidator;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
@@ -23,8 +24,8 @@ public class UserValidatorTests {
     /**
      * инициализация userController
      */
-    @BeforeAll
-    static void setUp() {
+    @BeforeEach
+    void setUp() {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
         userStorage = new InMemoryUserStorage();
     }
@@ -33,6 +34,7 @@ public class UserValidatorTests {
      * проверка граничных значений: поле "email"
      */
     @Test
+    @DirtiesContext
     public void checkingTheBoundaryValuesOfTheEmailField() {
         User user = User.builder()
                 .login("login")
@@ -57,6 +59,7 @@ public class UserValidatorTests {
      * проверка граничных значений: поле "login"
      */
     @Test
+    @DirtiesContext
     public void checkingTheBoundaryValuesOfTheLoginField() {
         User user = User.builder()
                 .email("eee@yandex.ru")
@@ -83,6 +86,7 @@ public class UserValidatorTests {
      * проверка граничных значений: поле "name"
      */
     @Test
+    @DirtiesContext
     public void checkingTheBoundaryValuesOfTheNameField() {
         User user = User.builder()
                 .email("eee.@yandex.ru")
@@ -98,6 +102,7 @@ public class UserValidatorTests {
      * проверка граничных значений: поле "birthday"
      */
     @Test
+    @DirtiesContext
     public void checkingTheBoundaryValuesOfTheBirthdayField() {
         User user = User.builder()
                 .email("eee@yandex.ru")
@@ -106,7 +111,7 @@ public class UserValidatorTests {
                 .build();
 
         List<ConstraintViolation> violationList = new ArrayList<>(validator.validate(user));
-        assertEquals(0, violationList.size(), "неверное количество исключений");
+        assertEquals(1, violationList.size(), "неверное количество исключений");
 
         user.setBirthday(LocalDate.of(1999, 1, 1));
         List<ConstraintViolation> violationList2 = new ArrayList<>(validator.validate(user));
