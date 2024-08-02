@@ -21,7 +21,9 @@ public class Film {
     @Size(max = 200, message = "size must be between 0 and 200")
     private String description;
     @MinimumDate
+    @NotNull
     private LocalDate releaseDate;
+    @NotNull
     @PositiveOrZero(message = "must be greater than or equal to 0")
     private int duration;
     private Set<Long> likes;

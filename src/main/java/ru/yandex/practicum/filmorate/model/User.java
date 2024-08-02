@@ -22,6 +22,7 @@ public class User {
     @NotContainSpace
     private String login;
     private String name;
+    @NotNull
     @Past(message = "must be a past date")
     private LocalDate birthday;
     private Set<Long> friends;
