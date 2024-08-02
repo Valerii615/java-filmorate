@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.mappers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
@@ -7,10 +8,12 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Slf4j
 @Component
 public class UserRowMapper implements RowMapper<User> {
     @Override
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+        try {
         return User.builder()
                 .id(rs.getLong("user_id"))
                 .email(rs.getString("email"))
@@ -18,5 +21,9 @@ public class UserRowMapper implements RowMapper<User> {
                 .name(rs.getString("name"))
                 .birthday(rs.getDate("birthday").toLocalDate())
                 .build();
+        } catch (Exception e) {
+            log.warn("Ошибка маппинга User: {}", e.getMessage());
+        }
+        return null;
     }
 }
