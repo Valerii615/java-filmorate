@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         FilmDbStorage.class, FilmRowMapper.class, GenreDbStorage.class, GenreRowMapper.class, GenreService.class,
         MpaDbStorage.class, MpaRowMapper.class, MpaService.class})
 public class FilmorateDataBaseAccessTests {
-        private final FilmDbStorage filmDbStorage;
+    private final FilmDbStorage filmDbStorage;
     private final UserDbStorage userDbStorage;
     private final MpaDbStorage mpaDbStorage;
     private final GenreDbStorage genreDbStorage;
@@ -226,6 +226,74 @@ public class FilmorateDataBaseAccessTests {
         userDbStorage.removeFromFriend(1,2);
         assertEquals(0, userDbStorage.findFriendsListId(1).size(), "Неверное количество друзей");
     }
+
+    /**
+     * добавление пустого email и login в users
+     */
+    @Test
+    @DirtiesContext
+    public void addNullEmailAndLoginInUsers() {
+        User user = User.builder()
+                .email(null)
+                .login("user0")
+                .name("userName0")
+                .birthday(LocalDate.of(1991, 1, 1))
+                .build();
+        try {
+            userDbStorage.addUser(user);
+        } catch (Exception e) {
+            assertEquals("PreparedStatementCallback; Значение NULL не разрешено для поля \"EMAIL\"\n" +
+                    "NULL not allowed for column \"EMAIL\"; SQL statement:\n" +
+                    "INSERT INTO users(email, login, name, birthday) VALUES (?, ?, ?, ?) [23502-224]",
+                    e.getMessage(), "Получено неверное исключение");
+        }
+        user.setEmail("us0@mail.ru");
+        user.setLogin(null);
+        try {
+            userDbStorage.addUser(user);
+        } catch (Exception e) {
+            assertEquals("PreparedStatementCallback; Значение NULL не разрешено для поля \"LOGIN\"\n" +
+                    "NULL not allowed for column \"LOGIN\"; SQL statement:\n" +
+                    "INSERT INTO users(email, login, name, birthday) VALUES (?, ?, ?, ?) [23502-224]",
+                    e.getMessage(), "Получено неверное исключение");
+        }
+    }
+
+    /**
+     * добавление пустого name и description > 200
+     */
+    @Test
+    @DirtiesContext
+    public void addNullNameAndLongLengthDescription() {
+        Film film = Film.builder()
+                .name(null)
+                .description("description_0")
+                .releaseDate(LocalDate.of(2001, 1, 1))
+                .duration(11)
+                .mpa(mpaDbStorage.findById(1))
+                .build();
+        try {
+            filmDbStorage.add(film);
+        } catch (Exception e) {
+            assertEquals("PreparedStatementCallback; Значение NULL не разрешено для поля \"NAME\"\n" +
+                    "NULL not allowed for column \"NAME\"; SQL statement:\n" +
+                    "INSERT INTO films(name, description, releaseDate, duration, rating) VALUES (?, ?, ?, ?, ?) [23502-224]",
+                    e.getMessage(), "Получено неверное исключение");
+        }
+        film.setName("film0");
+        film.setDescription("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" +
+                "11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" +
+                "11111111111");
+        try {
+            filmDbStorage.add(film);
+        } catch (Exception e) {
+            assertEquals("PreparedStatementCallback; Значение слишком длинное для поля \"DESCRIPTION CHARACTER VARYING(200)\": \"'1111111111111111111111111111111111111111111111111111111111111111111111111111111... (201)\"\n" +
+                            "Value too long for column \"DESCRIPTION CHARACTER VARYING(200)\": \"'1111111111111111111111111111111111111111111111111111111111111111111111111111111... (201)\"; SQL statement:\n" +
+                            "INSERT INTO films(name, description, releaseDate, duration, rating) VALUES (?, ?, ?, ?, ?) [22001-224]",
+                    e.getMessage(), "Получено неверное исключение");
+        }
+    }
+
 
     public void addAllFilm() {
         filmDbStorage.add(film1);
